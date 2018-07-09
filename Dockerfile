@@ -35,3 +35,6 @@ RUN apt-get update \
 
 # Install postgres client
 RUN apt-get -y install postgresql-client
+
+# Install Flynn CLI
+RUN L=/usr/local/bin/flynn && curl -sSL -A "`uname -sp`" https://dl.flynn.io/cli | zcat >$L && chmod +x $L
