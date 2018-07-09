@@ -1,8 +1,4 @@
-ARG RUBY_VERSION
-FROM ruby:${RUBY_VERSION}
-
-ARG RUBY_VERSION
-ARG NODE_VERSION
+FROM ruby:2.3.1
 
 # Replace shell with bash so we can source files
 RUN rm /bin/sh && ln -s /bin/bash /bin/sh
@@ -21,13 +17,13 @@ RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.33.8/i
 
 # install node and npm
 RUN source $NVM_DIR/nvm.sh \
-    && nvm install $NODE_VERSION \
-    && nvm alias default $NODE_VERSION \
+    && nvm install 9.4.0 \
+    && nvm alias default 9.4.0 \
     && nvm use default
 
 # add node and npm to path so the commands are available
-ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
-ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
+ENV NODE_PATH $NVM_DIR/v9.4.0/lib/node_modules
+ENV PATH $NVM_DIR/versions/node/v9.4.0/bin:$PATH
 
 # Install yarn
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
