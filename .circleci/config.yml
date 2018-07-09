@@ -1,0 +1,39 @@
+image_config: &image_config
+
+  # make sure to set your Docker Hub username & password in CircleCI,
+  # either as project-specific environment variables
+  # or as resources in your organization's org-global Context
+
+  IMAGE_NAME: ruby-node
+
+  RUBY_VERSION_NUM: 2.3.1
+
+  NODE_VERSION_NUM: 9.4.0
+
+version: 2
+jobs:
+  build:
+    machine: true
+    environment:
+      <<: *image_config
+
+    steps:
+      - checkout
+
+      - run:
+          name: Login to Docker Hub
+          command: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+
+      - run:
+          name: Build image
+          command: |
+            docker build -t $DOCKER_REPO/$IMAGE_NAME:$RUBY_VERSION_NUM-$NODE_VERSION_NUM \
+                   --build-arg RUBY_VERSION=$RUBY_VERSION_NUM \
+                   --build-arg NODE_VERSION=$NODE_VERSION_NUM \
+                   .
+      - run:
+          name: Push to Docker Hub
+          command: docker push $DOCKER_REPO/$IMAGE_NAME:$RUBY_VERSION_NUM-$NODE_VERSION_NUM && sleep 10
+
+      - store_artifacts:
+          path: Dockerfile
